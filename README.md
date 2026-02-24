@@ -1,4 +1,4 @@
-# Trending News Feed (Express + Vanilla JS)
+# World News (Express + Vanilla JS)
 
 This project is a simple full-stack news feed app.
 
@@ -34,7 +34,9 @@ Notes:
 - Frontend uses fetch() to call `/api/news`.
 
 Developer note:
-- The frontend shows a small developer note above the feed that indicates the backend `source` field (either `newsapi` or `mock`) and the query used. This helps developers quickly verify where the data came from.
+- The frontend shows a small developer note above the feed that indicates the backend `source` field (e.g. `newsapi` or `reddit`) and the query used. This helps developers quickly verify where the data came from.
+
+Important: The app no longer ships mock sample articles. To use the `NewsAPI` provider you must set the `NEWSAPI_KEY` environment variable in your local or hosted environment. Alternatively select `Reddit` as provider (no API key required).
 
 Developer details (expanded):
 - Click "Show details" in the developer note to see a JSON object `backendInfo` returned by the backend. It includes fields such as:

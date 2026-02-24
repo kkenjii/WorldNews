@@ -45,7 +45,7 @@ function renderArticle(a) {
   if (badge) {
     const src = (a.fetchedFrom || 'unknown');
     badge.dataset.source = src;
-    badge.textContent = src === 'newsapi' ? 'NewsAPI' : (src === 'mock' ? 'Mock' : 'Unknown');
+  badge.textContent = src === 'newsapi' ? 'NewsAPI' : (src === 'reddit' ? 'Reddit' : 'Unknown');
   }
   if (subredditEl) {
     subredditEl.textContent = a.subreddit || a.source || '';

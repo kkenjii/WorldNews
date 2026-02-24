@@ -2,6 +2,8 @@
 // It attempts to fetch from NewsAPI if NEWSAPI_KEY is provided in env.
 // Otherwise it returns mock data.
 
+require('dotenv').config();
+
 const express = require('express');
 const fetch = require('node-fetch');
 const path = require('path');
@@ -23,30 +25,6 @@ function formatArticle(a) {
   };
 }
 
-// Mock data returned if no API key
-const MOCK = [
-  {
-    title: 'Tech startups in the Philippines see surge in funding',
-    description: 'A wave of investments is flowing into Filipino startups focused on fintech and e-commerce.',
-    urlToImage: 'https://via.placeholder.com/800x450.png?text=Philippines+Tech',
-    source: { name: 'TechDaily' },
-    publishedAt: new Date().toISOString()
-  },
-  {
-    title: 'New gaming laptops announced with powerful GPUs',
-    description: 'Major manufacturers released next-gen models optimized for creators and gamers.',
-    urlToImage: 'https://via.placeholder.com/800x450.png?text=Gaming+Laptops',
-    source: { name: 'GamerNews' },
-    publishedAt: new Date(Date.now()-1000*60*60*6).toISOString()
-  },
-  {
-    title: 'Climate initiatives push for cleaner cities',
-    description: 'Local governments are adopting greener policies to reduce emissions.',
-    urlToImage: 'https://via.placeholder.com/800x450.png?text=Climate',
-    source: { name: 'WorldReport' },
-    publishedAt: new Date(Date.now()-1000*60*60*24).toISOString()
-  }
-];
 
 // /api/news?q=keyword
 app.get('/api/news', async (req, res) => {
@@ -138,19 +116,8 @@ app.get('/api/news', async (req, res) => {
   }
 
   if (!apiKey) {
-    // Filter mock by keyword if provided
-    const filtered = MOCK.filter(a => {
-      if (!q) return true;
-      const s = (a.title + ' ' + a.description).toLowerCase();
-      return s.includes(q.toLowerCase());
-    }).map(formatArticle).map(a => ({ ...a, fetchedFrom: 'mock' }));
-    const backendInfo = {
-      provider: 'mock',
-      note: 'Sample/mock data returned because NEWSAPI_KEY is not set',
-      timestamp: new Date().toISOString(),
-      totalResults: filtered.length
-    };
-    return res.json({ source: 'mock', articles: filtered, backendInfo });
+    // If NewsAPI key is not set, require it for NewsAPI provider. Reddit still works via provider=reddit.
+    return res.status(400).json({ error: 'NEWSAPI_KEY not set. Set NEWSAPI_KEY environment variable to use NewsAPI provider.' });
   }
 
   // Use NewsAPI.org top-headlines endpoint as an example

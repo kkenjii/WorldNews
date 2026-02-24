@@ -1,5 +1,5 @@
 {
-  "name": "news-backend",
+  "name": "world-news",
   "version": "1.0.0",
   "description": "Express backend for trending news feed (uses NewsAPI or mock data)",
   "main": "server.js",
@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^17.3.1",
     "express": "^4.18.2",
     "node-fetch": "^2.6.7"
   }
