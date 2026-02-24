@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Trending News Feed</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Trending News</h1>
+      <div class="search">
+        <select id="providerSelect" title="Select provider">
+          <option value="reddit">Reddit</option>
+          <option value="newsapi">NewsAPI</option>
+          <option value="mock">Mock</option>
+        </select>
+        <input id="searchInput" type="search" placeholder="Search topics (e.g. Philippines, tech)" />
+        <button id="searchBtn">Search</button>
+      </div>
+    </header>
+
+    <!-- Developer note: shows which backend source provided the data -->
+    <div id="devNote" class="dev-note" aria-live="polite">
+      <span id="devSummary"></span>
+      <button id="devToggle" class="dev-toggle" aria-expanded="false">Show details</button>
+      <pre id="devDetails" class="dev-details" style="display:none"></pre>
+    </div>
+
+    <main class="container">
+      <section id="feed" class="feed">
+        <!-- Articles will be rendered here -->
+      </section>
+    </main>
+
+    <template id="cardTpl">
+      <article class="card">
+        <img class="thumb" src="" alt="article image" />
+        <div class="card-body">
+          <h2 class="title"></h2>
+          <p class="desc"></p>
+          <div class="meta"></div>
+        </div>
+        <div class="meta-side">
+          <div class="badge" title="data source"></div>
+          <div class="subreddit" title="subreddit"></div>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
