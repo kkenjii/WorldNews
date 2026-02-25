@@ -10,6 +10,12 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const REDDIT_BASE_URL = (process.env.REDDIT_BASE_URL || 'https://www.reddit.com').replace(/\/$/, '');
+const REDDIT_USER_AGENT = process.env.REDDIT_USER_AGENT || 'news-feed-app/1.0';
+const REDDIT_NEWS_SUBS = (process.env.REDDIT_NEWS_SUBS || 'news,worldnews,technology,politics,business')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 // Serve static frontend files from ../frontend
 app.use('/', express.static(path.join(__dirname, '..', 'frontend')));
@@ -38,8 +44,8 @@ app.get('/api/news', async (req, res) => {
     try {
       // If query provided, use reddit search (site-wide).
       if (q) {
-        const base = `https://www.reddit.com/search.json?q=${encodeURIComponent(q)}&limit=30&sort=hot&type=link`;
-        const r = await fetch(base, { headers: { 'User-Agent': 'news-feed-app/1.0' } });
+        const base = `${REDDIT_BASE_URL}/search.json?q=${encodeURIComponent(q)}&limit=30&sort=hot&type=link`;
+        const r = await fetch(base, { headers: { 'User-Agent': REDDIT_USER_AGENT } });
         if (!r.ok) return res.status(502).json({ error: 'Reddit fetch failed', status: r.status });
         const data = await r.json();
         const items = (data && data.data && data.data.children) || [];
@@ -69,8 +75,8 @@ app.get('/api/news', async (req, res) => {
       }
 
       // No query: aggregate hot posts from a list of common news subreddits
-      const newsSubs = ['news', 'worldnews', 'technology', 'politics', 'business'];
-      const fetches = newsSubs.map(sub => fetch(`https://www.reddit.com/r/${sub}/hot.json?limit=30`, { headers: { 'User-Agent': 'news-feed-app/1.0' } }).then(r => r.ok ? r.json() : null).catch(() => null));
+      const newsSubs = REDDIT_NEWS_SUBS;
+      const fetches = newsSubs.map(sub => fetch(`${REDDIT_BASE_URL}/r/${sub}/hot.json?limit=30`, { headers: { 'User-Agent': REDDIT_USER_AGENT } }).then(r => r.ok ? r.json() : null).catch(() => null));
       const results = await Promise.all(fetches);
       let items = [];
       results.forEach((data, idx) => {
